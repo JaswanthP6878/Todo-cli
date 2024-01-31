@@ -1,7 +1,14 @@
 mod utils;
+use std::collections::HashMap;
 use std::env::args;
+use std::fmt::format;
 use std::process;
 use std::path::{Path, PathBuf};
+
+use std::fs::OpenOptions;
+
+
+use crate::utils::read_files_and_create_hashmap;
 
 fn verify_path_is_valid(path_str: &str) -> bool {
     let path = Path::new(path_str);
@@ -28,11 +35,18 @@ fn read_files_recursively(path: PathBuf, files: &mut Vec<PathBuf>) {
     }
 }
 
+fn save_to_todo_md(data: HashMap<&PathBuf, Vec<(String, usize)>>) {
+    let file = OpenOptions::new().write(true).truncate(true).open("./TODO.md").expect("cannot create the todo file");
+
+    todo!("writing to markdown. might be an issue.");
+
+}
+
 fn main() {
     let mut args: Vec<String> = args().collect();
     // let pwd = env::current_dir().expect("cannot get current working directory");
     // default:  if no argument is given then,  entire directory ".";
-    if args.len() ==  1 {
+    if args.len() ==  1{
         args.push(".".to_string());
     }
     // accept only relative paths and verify path is there;
@@ -47,5 +61,7 @@ fn main() {
     read_files_recursively(path, &mut files);
     // println!("{:?} {:?}, {:?}", args, pwd, path);
     // now we have all the valid files in "files" Vector;
-    println!("{:?}", files);
+    // println!("{:?}", read_files_and_create_hashmap(&files));
+    // use the HashMap and write the todos to a markdown file;
+    save_to_todo_md(read_files_and_create_hashmap(&files));
 }
