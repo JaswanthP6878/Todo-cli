@@ -7,4 +7,3 @@ edition = "2021"
 
 [dependencies]
 regex = "1.10.3"
-markdown = "0.3.0"

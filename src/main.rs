@@ -1,12 +1,11 @@
 mod utils;
 use std::collections::HashMap;
 use std::env::args;
-use std::fmt::format;
+use std::io::Write;
 use std::process;
 use std::path::{Path, PathBuf};
 
-use std::fs::OpenOptions;
-
+use std::fs::{File, OpenOptions};
 
 use crate::utils::read_files_and_create_hashmap;
 
@@ -16,6 +15,7 @@ fn verify_path_is_valid(path_str: &str) -> bool {
 }
 
 // by default ignore the target dir.
+// TODO : see if we can improve the performance of this function
 fn read_files_recursively(path: PathBuf, files: &mut Vec<PathBuf>) {
     let target = Path::new("./target").to_path_buf();
     for entry in path.read_dir().expect("cannot read dir") {
@@ -36,10 +36,27 @@ fn read_files_recursively(path: PathBuf, files: &mut Vec<PathBuf>) {
 }
 
 fn save_to_todo_md(data: HashMap<&PathBuf, Vec<(String, usize)>>) {
-    let file = OpenOptions::new().write(true).truncate(true).open("./TODO.md").expect("cannot create the todo file");
-
-    todo!("writing to markdown. might be an issue.");
-
+    let todo_path = Path::new("./todo.md");
+    let mut file: File;
+    if todo_path.exists() {
+        file = OpenOptions::new().write(true).truncate(true).open(todo_path).expect("cannot create the todo file");
+    } else  {
+        file = File::create("todo.md").unwrap();
+    }
+    file.write_all(b"# TODO List\n").expect("cannot write to file");
+    for (path, vec) in data.into_iter() {
+        if vec.len() == 0 {
+            continue;
+        }
+        file.write_all(b"\n").expect("cannot write to file");
+        let file_name = format!("- {}\n", path.to_str().expect("cannot convert to string"));
+        file.write_all(file_name.as_bytes()).expect("cannot write line");
+        for (todo, line_number) in vec {
+            let todo_item = format!("\t- {}, Line: {}\n", todo, line_number);
+            file.write_all(todo_item.as_bytes()).expect("cannot write line");
+        }
+    }
+    
 }
 
 fn main() {

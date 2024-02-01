@@ -4,7 +4,6 @@ use std::io::{BufRead, BufReader};
 
 use regex::Regex;
 
-
 pub fn read_files_and_create_hashmap(files: &Vec<PathBuf>) -> HashMap<&PathBuf, Vec<(String, usize)>>  {
     let mut todo_data:HashMap<&PathBuf, Vec<(String, usize)>> = HashMap::new();
     for entry in files {
