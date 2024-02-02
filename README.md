@@ -11,7 +11,6 @@ If a file in your project is as such
 ```rust
 // src/utils.rs
 
-// checks if a line of code has "// TODO :" pattern and return that string.
 // TODO : improve the performance of this function
 fn get_todo(val: &String) -> Option<String> {
     let re = Regex::new(r"[ \t]*//[ \t]*TODO[ \t]*:[ \t]*(.+)").expect("cannot parse the regex");
