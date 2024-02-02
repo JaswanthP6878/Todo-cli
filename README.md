@@ -33,5 +33,27 @@ and if you run the todo-cli in the root of the project, then it creates a file c
 ```
 
 ## Installation and Usage.
-> Need to add installation steps.
+
+### Macos
+1. Download the binary from the releases in the repo
+
+2. copy of move the executable to `/usr/local/bin` and make it executable. Make sure that `/usr/local/bin` is in the `$PATH`
+```bash
+cp /location/of/todo-core /usr/local/bin
+chmod +x /usr/local/bin/todo-core
+```
+3. **Remove the todo-core from quarantine so that macos can run the executable **
+```bash
+ xattr -d com.apple.quarantine /usr/local/bin/todo-core
+```
+4. close and open a new shell
+
+4. Now you can use the binary, Go to the directory or code base where you want to create the todo.md and run:
+```bash
+todo-core 
+```
+5. you can see the todo.md populated with the todos (that match the pattern mentioned in the previous section)
+
+
+
 
